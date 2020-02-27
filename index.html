@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+</head>
+<body>
+	<input type="text" id="input" placeholder="add something" />
+	<input type="button" id="button" name="addbutton" value="thêm tên"><br>
+	<input type="text" id="input2" placeholder="id to change....." />
+	<input type="button" id="pathbutton" name="pathbutton" value="xoá tên">
+<ol id="userList">
+
+</ol>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script type="text/javascript">	var button = document.getElementById('button');
+	var users =[];
+	var pathbutton = document.getElementById('pathbutton');
+	button.addEventListener('click', addName);
+	pathbutton.addEventListener('click', pathname)
+	axios.get('http://localhost:9080/todos'
+	).then(function(res) {
+		console.log(res);
+		users = res.data;
+		render(users);
+	});
+	
+	function addName() {
+	    var input = document.getElementById('input');
+	    if(input.value !== ''){
+	    let us = {
+	    	"id" : users[users.length - 1].id + 1,
+	    	"name" : input.value
+	    };
+	    console.log(us);
+//push thằng input value vào thằng user
+		users.push(us);
+//render nó ra
+		render(users);
+		input.value = '';
+		axios.post('http://localhost:9080/todos',us);
+	}
+	}
+	function pathname() {
+		var iduser = document.getElementById('input2');
+		var id = iduser.value;
+		if(typeof id !== 'number'){
+			
+			axios.delete('http://localhost:9080/todos/' + id);
+		}
+	}
+  	function render(users) {
+	var userList = document.getElementById('userList');
+    var content = users.map(function(user) {
+      return '<li>' + user.name + '</li>';
+    });
+    userList.innerHTML = content.join('');
+  	}
+
+
+</script>
+</body>
+</html>
